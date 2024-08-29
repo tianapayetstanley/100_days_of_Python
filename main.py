@@ -1,27 +1,20 @@
-from menu import Menu, MenuItem
-from coffee_maker import CoffeeMaker
-from money_machine import MoneyMachine
-
-#print report by creating an instance obj of the class MoneyMachine to use method from the class
-print("Report on inventory: ")
-coffee_maker = CoffeeMaker()
-money_machine = MoneyMachine()
-menu = Menu()
-coffee_maker.report()
-print()
+from question_model import Question
+from data import question_data
+from quiz_brain import Quizbrain
 
 
-is_on = True
-while is_on:
-    options = menu.get_items()
-    choice = input(f"what would you like {options}")
-    if choice == "off":
-        is_on = False
-    elif choice == "report":
-        coffee_maker.report()
-        money_machine.report()
-    else:
-        drink = menu.find_drink(choice)
-        if coffee_maker.is_resource_sufficient(drink):
-            if money_machine.make_payment(drink.cost):
-                coffee_maker.make_coffee(drink)
+question_bank = []
+
+for question in question_data:         
+    question_text = question["text"]
+    question_answer = question["answer"]
+    new_question = Question(question_text, question_answer)  #assign new question to class objects
+    question_bank.append(new_question)    #append question to q bank
+
+quiz = Quizbrain(question_bank)
+while quiz.still_has_questions():
+    quiz.next_question()
+
+print("Completed the quiz")
+print(f"Your final score is: {quiz.total_score()}")
+
